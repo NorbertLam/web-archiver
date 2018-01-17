@@ -13,8 +13,8 @@ import (
 )
 
 type Page struct {
-	Title string `json:"title,omitempty"`
-	Body  string `json:"body,omitempty"`
+	Url  string `json:"url,omitempty"`
+	Html string `json:"html,omitempty"`
 }
 
 type Key struct {
@@ -40,8 +40,8 @@ func (env *Env) createPage(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 
-	pageTitle := p.Title + ".html"
-	data := p.Body
+	pageTitle := p.Url + ".html"
+	data := p.Html
 	lent := len(data)
 
 	s := make([]byte, lent)
