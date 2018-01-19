@@ -41,31 +41,31 @@ var (
 // Page data is uploaded to BlockBlob using PutBlock.
 // PutBlockList then commits the new BlockBlob to the database.
 func (env *Env) createPage(w http.ResponseWriter, req *http.Request) {
-	var p Page
+	var page Page
 	decoder := json.NewDecoder(req.Body)
-	if err := decoder.Decode(&p); err != nil {
+	if err := decoder.Decode(&page); err != nil {
 		log.Fatal(err)
 	}
 
-	pageTitle := p.Url + ".html"
-	data := p.Html
-	lent := len(data)
+	pageTitle := page.Url + ".html"
+	data := page.Html
+	length := len(data)
 
-	s := make([]byte, lent)
-	for i := 0; i < lent; i++ {
-		s[i] = byte(data[i])
+	byteArray := make([]byte, length)
+	for i := 0; i < length; i++ {
+		byteArray[i] = byte(data[i])
 	}
 
-	cnt := blobCli.GetContainerReference(env.eKey.ContainerName)
-	b := cnt.GetBlobReference(pageTitle)
-	b.CreateBlockBlob(nil)
+	container := blobCli.GetContainerReference(env.eKey.ContainerName)
+	blobRef := container.GetBlobReference(pageTitle)
+	blobRef.CreateBlockBlob(nil)
 
 	blockID := base64.StdEncoding.EncodeToString([]byte(pageTitle))
-	if err := b.PutBlock(blockID, []byte(s), nil); err != nil {
+	if err := blobRef.PutBlock(blockID, []byte(byteArray), nil); err != nil {
 		fmt.Printf("put block failed: %v", err)
 	}
 
-	list, err := b.GetBlockList(storage.BlockListTypeUncommitted, nil)
+	list, err := blobRef.GetBlockList(storage.BlockListTypeUncommitted, nil)
 	if err != nil {
 		fmt.Printf("get block list failed: %v", err)
 	}
@@ -76,7 +76,7 @@ func (env *Env) createPage(w http.ResponseWriter, req *http.Request) {
 		uncommittedBlocksList[i].Status = storage.BlockStatusUncommitted
 	}
 
-	if err = b.PutBlockList(uncommittedBlocksList, nil); err != nil {
+	if err = blobRef.PutBlockList(uncommittedBlocksList, nil); err != nil {
 		fmt.Printf("put block list failed: %v", err)
 	}
 
