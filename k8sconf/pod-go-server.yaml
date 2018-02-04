@@ -1,0 +1,21 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: go-server
+spec:
+  selector:
+    matchLabels:
+      app: server
+  template:
+    metadata:
+      labels:
+        app: server
+    spec:
+      containers:
+        - name: go-server
+          image: registry:2
+          ports: 
+          - containerPort: 30587
+          envFrom:
+            - secretRef:
+                name: envsecret

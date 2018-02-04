@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-service
+spec: 
+  type: NodePort
+  selector:
+    app: server
+  ports:
+  - protocol: TCP
+    port: 30587
+    targetPort: 30587
