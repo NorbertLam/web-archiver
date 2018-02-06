@@ -1,6 +1,6 @@
-# go-azure-server
+# web-archiver
 
-go-azure-server starts up a web server which handles storing html data within a Microsoft Azure Blob storage service.
+web-archiver starts up a web server which handles storing html data within a Microsoft Azure Blob storage service.
 
 # Docker setup
 
