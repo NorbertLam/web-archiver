@@ -1,6 +1,6 @@
 # web-archiver
 
-web-archiver starts up a web server which handles storing html data within a Microsoft Azure Blob storage service.
+web-archiver is a golang service which persists HTML data in Microsoft Azure Blob Storage.
 
 # Docker setup
 
